@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homework-deployment
+  namespace: homework
+  labels:
+    app: homework
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: homework
+  template:
+    metadata:
+      labels:
+        app: homework
+    spec:
+      volumes:
+      - name: shared-volume
+        emptyDir:
+          sizeLimit: 5Mi
+
+      initContainers:
+      - name: web-server-config
+        image: busybox:1.37.0-musl
+        command: ['sh', '-c', 'echo "server {listen \${NGINX_PORT}; location / {root \${NGINX_ROOT_DIR}; index index.html index.htm;}}" > /nginx-templates/default.conf.template']
+        volumeMounts:
+        - mountPath: /nginx-templates
+          name: shared-volume
+          subPath: nginx-templates
+      - name: init
+        image: busybox:1.37.0-musl
+        command: ['sh', '-c', 'echo "<html><body>Homework 3</body></html>" > /init/index.html']
+        volumeMounts:
+        - mountPath: /init
+          name: shared-volume
+          subPath: homework
+
+      containers:
+      - name: web-server
+        image: nginx:alpine3.20
+        ports:
+        - name: web-server
+          containerPort: 8000
+        env:
+        - name: NGINX_ENVSUBST_TEMPLATE_DIR
+          value: "/etc/nginx/templates"
+        - name: NGINX_ENVSUBST_OUTPUT_DIR
+          value: "/etc/nginx/conf.d"
+        - name: NGINX_PORT
+          value: "8000"
+        - name: NGINX_ROOT_DIR
+          value: "/homework"
+        volumeMounts:
+        - mountPath: /homework
+          name: shared-volume
+          subPath: homework
+        - mountPath: /etc/nginx/templates/
+          name: shared-volume
+          subPath: nginx-templates
+        lifecycle:
+          preStop:
+              exec:
+                command: ['sh','-c','rm -f /homework/index.html /etc/nginx/templates/default.conf.template']
+        readinessProbe:
+          httpGet:
+            path: /index.html
+            port: web-server
+          initialDelaySeconds: 5
+          periodSeconds: 5
