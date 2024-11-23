@@ -4,6 +4,7 @@ metadata:
   name: homework-pvc
   namespace: homework
 spec:
+  storageClassName: homework-storageclass
   accessModes:
     - ReadWriteOnce
   volumeMode: Filesystem
