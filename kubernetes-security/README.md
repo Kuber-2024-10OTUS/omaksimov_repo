@@ -226,3 +226,16 @@ kubectl apply -f namespace.yaml -f serviceAccount.yaml -f clusterRole.yaml -f cl
 
 curl http://homework.otus/metrics.html
 ```
+```
+...
+workqueue_work_duration_seconds_bucket{name="priority_and_fairness_config_queue",le="9.999999999999999e-06"} 0
+workqueue_work_duration_seconds_bucket{name="priority_and_fairness_config_queue",le="9.999999999999999e-05"} 0
+workqueue_work_duration_seconds_bucket{name="priority_and_fairness_config_queue",le="0.001"} 0
+workqueue_work_duration_seconds_bucket{name="priority_and_fairness_config_queue",le="0.01"} 1
+workqueue_work_duration_seconds_bucket{name="priority_and_fairness_config_queue",le="0.1"} 1
+workqueue_work_duration_seconds_bucket{name="priority_and_fairness_config_queue",le="1"} 1
+workqueue_work_duration_seconds_bucket{name="priority_and_fairness_config_queue",le="10"} 1
+workqueue_work_duration_seconds_bucket{name="priority_and_fairness_config_queue",le="+Inf"} 1
+workqueue_work_duration_seconds_sum{name="priority_and_fairness_config_queue"} 0.003295283
+workqueue_work_duration_seconds_count{name="priority_and_fairness_config_queue"} 1
+```
