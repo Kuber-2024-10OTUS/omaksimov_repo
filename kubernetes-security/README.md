@@ -146,7 +146,7 @@ kubectl config --kubeconfig=homework-kubeconfig view
 apiVersion: v1
 clusters:
 - cluster:
-    certificate-authority: /home/odm/.minikube/ca.crt
+    certificate-authority: /home/username/.minikube/ca.crt
     server: https://192.168.49.2:8443
   name: minikube
 contexts:
