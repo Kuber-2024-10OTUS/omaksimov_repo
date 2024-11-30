@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "homework.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    {{- include "homework.selectorLabels" . | nindent 4 }}
+  ports:
+  - port: {{ .Values.service.listenPort }}
+    targetPort: web-server
