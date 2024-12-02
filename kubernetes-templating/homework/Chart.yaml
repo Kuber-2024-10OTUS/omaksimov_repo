@@ -5,7 +5,7 @@ type: application
 version: 1.0.0
 appVersion: "1.0.0"
 
-# dependencies:
-#   - name: bitnamicharts/postgresql
-#     version: "16.2.3"
-#     repository: "oci://registry-1.docker.io"
+dependencies:
+  - name: postgresql
+    version: ~16.2
+    repository: "oci://registry-1.docker.io/bitnamicharts"
