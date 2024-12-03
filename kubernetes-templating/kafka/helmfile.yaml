@@ -1,0 +1,16 @@
+releases:
+- name: kafka
+  namespace: dev
+  createNamespace: true
+  chart: oci://registry-1.docker.io/bitnamicharts/kafka
+  version: 31.0.0
+  values:
+    - values-dev.yaml
+
+- name: kafka
+  namespace: prod
+  createNamespace: true
+  chart: oci://registry-1.docker.io/bitnamicharts/kafka
+  version: 31.0.0
+  values:
+    - values-prod.yaml
