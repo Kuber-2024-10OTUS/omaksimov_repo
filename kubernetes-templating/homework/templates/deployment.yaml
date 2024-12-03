@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "homework.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.deployment.hpa.enabled | default true }}
+  replicas: {{ .Values.deployment.replicas }}
+  {{- end }}
+  {{- if .Values.deployment.strategy }}
+  {{- with .Values.deployment.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "homework.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "homework.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ .Release.Name }}
+      volumes:
+      - name: shared-volume
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-shared-volume
+      - name: nginx-config
+        configMap:
+          name: {{ .Release.Name }}-nginx-config
+
+      initContainers:
+      - name: {{ .Release.Name }}-init
+        image: {{ .Values.init.image }}:{{ .Values.init.imageTag }}
+        command: ['sh', '-c', 'echo "<html><body>Homework 6</body></html>" > /init/index.html']
+        volumeMounts:
+        - mountPath: /init
+          name: shared-volume
+
+      containers:
+      - name: {{ .Release.Name }}-nginx
+        image: {{ .Values.nginx.image }}:{{ .Values.nginx.imageTag }}
+        ports:
+        - name: {{ .Values.nginx.portName }}
+          containerPort: {{ .Values.nginx.port }}
+        volumeMounts:
+        - mountPath:  {{ .Values.nginx.rootDir }}
+          name: shared-volume
+        - mountPath: /etc/nginx/conf.d/
+          name: nginx-config
+        lifecycle:
+          preStop:
+              exec:
+                command: ['sh','-c','rm -f /homework/index.html']
+        {{- with .Values.nginx.containerProbes }}
+        {{- if .enabled }}
+        {{- if .livenessProbe }}
+        livenessProbe:
+          {{- toYaml .livenessProbe | nindent 10 }}
+        {{- end }}
+        {{- if .readinessProbe }}
+        readinessProbe:
+          {{- toYaml .readinessProbe | nindent 10 }}
+        {{- end }}
+        {{- if .startupProbe }}
+        startupProbe:
+          {{- toYaml .startupProbe | nindent 10 }}
+        {{- end }}
+        {{- end }}
+        {{- end }}

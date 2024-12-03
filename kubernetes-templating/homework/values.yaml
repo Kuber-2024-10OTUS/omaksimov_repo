@@ -1,0 +1,51 @@
+# homework app
+externalDomain: &externalDomain "homework.otus"
+
+deployment:
+  hpa:
+    enabled: false
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+
+init:
+  image: busybox
+  imageTag: 1.37.0-musl
+
+nginx:
+  image: nginx
+  imageTag: alpine3.20
+  port: 8000
+  portName: &nginxPortName "web-server"
+  rootDir: "/homework"
+  serverName: *externalDomain
+  containerProbes:
+    enabled: true
+    livenessProbe:
+      tcpSocket:
+        port: *nginxPortName
+      initialDelaySeconds: 5
+      periodSeconds: 10
+    readinessProbe:
+      httpGet:
+        path: /index.html
+        port: *nginxPortName
+      initialDelaySeconds: 10
+      periodSeconds: 5
+
+service:
+  type: ClusterIP
+  listenPort: 80
+
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  host: *externalDomain
+
+# postgresql
+global:
+  postgresql:
+    auth:
+      database: homework_db
