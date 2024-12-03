@@ -11,4 +11,3 @@ listeners:
     protocol: PLAINTEXT
   interbroker:
     protocol: PLAINTEXT
-
