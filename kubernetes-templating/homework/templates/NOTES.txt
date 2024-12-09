@@ -1,0 +1,6 @@
+You have successfully deployed {{ .Chart.Name | quote }} helm chart!
+Your release is named {{ .Release.Name | quote }}.
+
+{{- if .Values.ingress.enabled }}
+You can now access deployed app here: http://{{ .Values.externalDomain }}.
+{{- end }}

@@ -1,0 +1,13 @@
+controller:
+  replicaCount: 1
+broker:
+  replicaCount: 0
+
+image:
+  tag: latest
+ 
+listeners:
+  client:
+    protocol: PLAINTEXT
+  interbroker:
+    protocol: PLAINTEXT
