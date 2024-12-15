@@ -24,4 +24,4 @@ rules:
   verbs: ["create", "get", "delete"]
 - apiGroups: ["otus.homework"]
   resources: ["mysqls"]
-  verbs: ["create", "delete", "patch"]
+  verbs: ["create", "get", "delete", "list", "patch", "watch"]
