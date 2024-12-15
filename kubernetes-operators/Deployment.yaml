@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homework-mysql-operator
+  namespace: mysql-operator
+  labels:
+    app: homework-mysql-operator
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: homework-mysql-operator
+  template:
+    metadata:
+      labels:
+        app: homework-mysql-operator
+    spec:
+      serviceAccountName: mysql-operator-api-full-access
+      automountServiceAccountToken: true
+      containers:
+      - name: mysql-operator
+        image: roflmaoinmysoul/mysql-operator:1.0.0

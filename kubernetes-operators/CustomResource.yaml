@@ -1,7 +1,8 @@
 apiVersion: otus.homework/v1
 kind: MySQL
 metadata:
-  name: test-mysql-custom-resource
+  name: mysql-custom-resource
+  namespace: default
 spec:
   image: "mysql:8.0.40-bookworm"
   database: "homework-db"
