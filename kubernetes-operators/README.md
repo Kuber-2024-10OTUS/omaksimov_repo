@@ -72,3 +72,32 @@ No resources found in default namespace.
 kubectl get pv                          
 No resources found
 ```
+6. Для задания со * изменен манифест [ClusterRole](./ClusterRole.yaml) - в нем описаны минимальные привилегии для работы оператора:
+```
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: mysql-operator-api-access
+rules:
+- apiGroups: [""]
+  resources: ["services", "persistentvolumeclaims", "persistentvolumes"]
+  verbs: ["create", "delete"]
+- apiGroups: [""]
+  resources: ["events"]
+  verbs: ["create"]
+- apiGroups: [""]
+  resources: ["namespaces"]
+  verbs: ["list", "watch"]
+- apiGroups: ["apiextensions.k8s.io"]
+  resources: ["customresourcedefinitions"]
+  verbs: ["list", "watch"]
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["create", "delete"]
+- apiGroups: ["apps"]
+  resources: ["deployments/status"]
+  verbs: ["get"]
+- apiGroups: ["otus.homework"]
+  resources: ["mysqls"]
+  verbs: ["create", "get", "delete", "list", "patch", "watch"]
+```

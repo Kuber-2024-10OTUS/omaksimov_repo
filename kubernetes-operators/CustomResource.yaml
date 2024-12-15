@@ -7,4 +7,4 @@ spec:
   image: "mysql:8.0.40-bookworm"
   database: "homework-db"
   password: "homework-db-strong-password"
-  storage_size: "100Mi"
+  storage_size: "200Mi"
