@@ -19,7 +19,7 @@ spec:
       labels:
         app: homework-mysql-operator
     spec:
-      serviceAccountName: mysql-operator-api-full-access
+      serviceAccountName: mysql-operator-api-access
       automountServiceAccountToken: true
       containers:
       - name: mysql-operator

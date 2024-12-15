@@ -6,5 +6,5 @@ metadata:
 spec:
   image: "mysql:8.0.40-bookworm"
   database: "homework-db"
-  password: "homework-db-password"
-  storage_size: "150Mi"
+  password: "homework-db-strong-password"
+  storage_size: "200Mi"
