@@ -1,0 +1,13 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: nginx-metrics
+  namespace: homework
+spec:
+  selector:
+    matchLabels:
+      app: nginx-metrics
+  endpoints:
+  - port: nginx-exporter
+    path: "/metrics"
+    interval: 15s
