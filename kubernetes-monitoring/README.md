@@ -48,8 +48,8 @@ kubectl port-forward -n monitoring StatefulSet/prometheus-prometheus-operator-ku
 ```
 Либо, при помощи curl:
 ```
-curl http://localhost:9090/api/v1/query\?query={nginx_connections_accepted} | jq
+curl -s http://localhost:9090/api/v1/query\?query={nginx_connections_accepted} | jq
 ```
 ```
-curl http://localhost:9090/api/v1/query\?query\=\{nginx_up\} | jq 
+curl -s http://localhost:9090/api/v1/query\?query\=\{nginx_up\} | jq 
 ```
