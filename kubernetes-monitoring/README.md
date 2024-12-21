@@ -53,3 +53,62 @@ curl -s http://localhost:9090/api/v1/query\?query={nginx_connections_accepted} |
 ```
 curl -s http://localhost:9090/api/v1/query\?query\=\{nginx_up\} | jq 
 ```
+```
+curl -s http://localhost:9090/api/v1/query\?query\=\{nginx_connections_accepted\} | jq
+{
+  "status": "success",
+  "data": {
+    "resultType": "vector",
+    "result": [
+      {
+        "metric": {
+          "__name__": "nginx_connections_accepted",
+          "container": "nginx-exporter",
+          "endpoint": "nginx-exporter",
+          "instance": "10.244.0.74:9113",
+          "job": "nginx-metrics",
+          "namespace": "homework",
+          "pod": "nginx-metrics-578d7995c4-zm45g",
+          "service": "nginx-metrics"
+        },
+        "value": [
+          1734800889.163,
+          "268"
+        ]
+      },
+      {
+        "metric": {
+          "__name__": "nginx_connections_accepted",
+          "container": "nginx-exporter",
+          "endpoint": "nginx-exporter",
+          "instance": "10.244.0.76:9113",
+          "job": "nginx-metrics",
+          "namespace": "homework",
+          "pod": "nginx-metrics-578d7995c4-zrkbf",
+          "service": "nginx-metrics"
+        },
+        "value": [
+          1734800889.163,
+          "268"
+        ]
+      },
+      {
+        "metric": {
+          "__name__": "nginx_connections_accepted",
+          "container": "nginx-exporter",
+          "endpoint": "nginx-exporter",
+          "instance": "10.244.0.75:9113",
+          "job": "nginx-metrics",
+          "namespace": "homework",
+          "pod": "nginx-metrics-578d7995c4-kb5tw",
+          "service": "nginx-metrics"
+        },
+        "value": [
+          1734800889.163,
+          "267"
+        ]
+      }
+    ]
+  }
+}
+```
