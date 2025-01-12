@@ -18,7 +18,7 @@ rules:
   verbs: ["list", "watch"]
 - apiGroups: ["apps"]
   resources: ["deployments"]
-  verbs: ["create", "delete"]
+  verbs: ["create", "delete", "patch"]
 - apiGroups: ["apps"]
   resources: ["deployments/status"]
   verbs: ["get"]
