@@ -104,7 +104,7 @@ rules:
 7. Для задания с ** на python написан свой [оператор](./mysql-operator/), реализующий следующий функционал:
 - При создании ресурса типа [MySQL](./mysql-operator/src/mysql_operator.py#L77) в неймспейсе, в котором он был создан, создаются:
 [deployment](./mysql-operator/src/mysql_operator.py#L87) c заданным образом, [сервис](./mysql-operator/src/mysql_operator.py#L90) типа ClusterIP и [PVC](./mysql-operator/src/mysql_operator.py#L84) заданного размера.
-- При удалени объекта типа `MySQL`` каскадно удаляются связанные с ним [owner reference](./mysql-operator/src/mysql_operator.py#L17) ресурсы.
+- При удалени объекта типа `MySQL` каскадно удаляются связанные с ним [owner reference](./mysql-operator/src/mysql_operator.py#L17) ресурсы.
 
 Для сборки образа оператора создан [Dockerfile](./mysql-operator/Dockerfile), готовый образ доступен на Docker Hub:
 ```
