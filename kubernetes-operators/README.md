@@ -2,7 +2,7 @@
 
 ## Домашнее задание №7. Создание собственного CRD
 
-Домашнее задание выполнено на `Linux fedora 6.11.7-300.fc41.x86_64`, `minikube v1.34.0 (docker)` с включенными аддонами default-storageclass, storage-provisioner.
+Домашнее задание выполнено на `Linux fedora 6.12.8-200.fc41.x86_64`, `minikube v1.34.0 (docker)` с включенными аддонами default-storageclass, storage-provisioner.
 
 1. Создан манифест объекта [CustomResourceDefinition](./CustomResourceDefinition.yaml) для создания custom resource'ов типа MySQL, с обязательными полями `Image`, `Database`, `Password`, `Storage_size` и правилами из валидации.
 2. Созданы манифесты, описывающие:
@@ -117,5 +117,5 @@ docker pull omaximov/mysql_operator:20250112
 helm upgrade mysql-operator --install -n mysql-operator --create-namespace ./helm
 ```
 ```
-kubectl apply -f ./mysql-operator/CustomResource.yaml
+kubectl apply -f CustomResource.yaml
 ```
