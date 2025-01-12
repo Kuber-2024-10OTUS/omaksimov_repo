@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-metrics
+  namespace: homework
+  labels:
+    app: nginx-metrics
+spec:
+  type: ClusterIP
+  selector:
+    app: nginx-metrics
+  ports:
+  - name: web-server
+    port: 80
+    targetPort: web-server
+  - name: nginx-exporter
+    port: 9113
+    targetPort: nginx-exporter
