@@ -1,0 +1,13 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: mysql-operator-api-access
+subjects:
+- kind: ServiceAccount
+  name: mysql-operator-api-access
+  namespace: mysql-operator
+roleRef:
+  kind: ClusterRole
+  name: mysql-operator-api-access
+  apiGroup: rbac.authorization.k8s.io
