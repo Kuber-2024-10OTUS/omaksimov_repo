@@ -46,6 +46,9 @@ vault operator init -key-shares=1 -key-threshold=1
 ```bash
 vault operator unseal <key>
 ```
+```bash
+vault login <token>
+```
 4. Включен secret engine `kv-v2` по префиксу пути `otus`
 ```bash
 vault secrets enable -path=otus kv-v2
@@ -94,7 +97,7 @@ vault write auth/kubernetes/config \
     kubernetes_host=https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT \
     kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
 ```
-7. Создана и пременена [политика](./otus-policy.hcl) для просмотра созданных ранее секретов:
+7. Создана и применена [политика](./otus-policy.hcl) для просмотра созданных ранее секретов:
 ```bash
 vault policy write otus-policy - <<EOF
 path "otus/data/cred" {
