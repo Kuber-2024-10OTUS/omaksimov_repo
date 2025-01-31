@@ -1,0 +1,25 @@
+global:
+  logJSON: true
+  name: homework
+  image: hashicorp/consul:1.20
+  datacenter: homework-dc1
+  gossipEncryption:
+    autoGenerate: true
+
+client:
+  enabled: true
+
+server:
+  enabled: true
+  replicas: 3
+  storage: 200Mi
+  disruptionBudget:
+    maxUnavailable: 0
+
+ui:
+  enabled: true
+  service:
+    type: ClusterIP
+
+connectInject:
+  enabled: false
