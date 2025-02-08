@@ -1,0 +1,27 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-operator
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: mysql-operator
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: mysql-operator
+  template:
+    metadata:
+      labels:
+        app: mysql-operator
+    spec:
+      serviceAccountName: mysql-operator-api-access
+      automountServiceAccountToken: true
+      containers:
+      - name: mysql-operator
+        image: {{ .Values.image.repo }}:{{ .Values.image.tag }}

@@ -1,0 +1,50 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: mysqls.otus.homework
+spec:
+  scope: Namespaced
+  group: otus.homework
+  names:
+    plural: mysqls
+    singular: mysql
+    kind: MySQL
+    shortNames:
+    - msl
+    - msls
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              x-kubernetes-validations:
+                - rule: "self.image.matches('((.+)/)*:.+')"
+                  message: "Image tag should have correct format"
+                - rule: "self.database.matches('^[0-9A-Za-z-_]{1,64}$')"
+                  message: "DB name cannot be longer than 64 characters, and must contain alphanumeric symbols, dashes and underscores"
+                - rule: "size(self.password) > 12"
+                  message: "Password should be longer than 12 symbols"
+                - rule: "self.storage_size.matches('[0-9]+[A-Za-z]+')"
+                  message: "Storage size should be specified as ValueSuffix without spaces between"
+              properties:
+                image:
+                  type: string
+                database:
+                  type: string
+                password:
+                  type: string
+                storage_size:
+                  type: string
+              required:
+                - image
+                - database
+                - password
+                - storage_size
+            status:
+              type: object
+              x-kubernetes-preserve-unknown-fields: true

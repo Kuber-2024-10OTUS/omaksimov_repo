@@ -1,0 +1,2 @@
+You have successfully deployed {{ .Chart.Name | quote }} helm chart!
+Your release is named {{ .Release.Name | quote }}.

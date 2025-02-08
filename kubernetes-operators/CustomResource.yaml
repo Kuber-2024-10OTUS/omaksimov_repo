@@ -1,0 +1,10 @@
+apiVersion: otus.homework/v1
+kind: MySQL
+metadata:
+  name: mysql-custom-resource
+  namespace: default
+spec:
+  image: "mysql:8.0.40-bookworm"
+  database: "homework-db"
+  password: "homework-db-strong-password"
+  storage_size: "200Mi"

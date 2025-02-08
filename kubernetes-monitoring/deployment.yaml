@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-metrics
+  namespace: homework
+  labels:
+    app: nginx-metrics
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-metrics
+  template:
+    metadata:
+      labels:
+        app: nginx-metrics
+    spec:
+      containers:
+      - name: nginx
+        image: omaximov/metrics:nginx
+        ports:
+        - name: web-server
+          containerPort: 80
+        livenessProbe:
+          tcpSocket:
+            port: web-server
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /index.html
+            port: web-server
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      - name: nginx-exporter
+        image: nginx/nginx-prometheus-exporter:1.4.0
+        ports:
+        - name: nginx-exporter
+          containerPort: 9113
+        command: ['/usr/bin/nginx-prometheus-exporter']
+        args: ['--nginx.scrape-uri=http://localhost:80/metrics']
