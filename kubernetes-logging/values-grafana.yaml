@@ -1,0 +1,22 @@
+persistence:
+  type: pvc
+  enabled: true
+  size: 1Gi
+
+nodeSelector:
+  node-role: "infra"
+
+tolerations:
+  - key: "node-role"
+    operator: Equal
+    value: "infra"
+    effect: "NoSchedule"
+
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+    - name: Loki
+      type: loki
+      url: http://loki-gateway.logging.svc.cluster.local/
+      isDefault: true

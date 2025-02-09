@@ -1,0 +1,81 @@
+deploymentMode: SingleBinary
+
+singleBinary:
+  replicas: 1
+  nodeSelector: &nodeSelector
+    node-role: "infra"
+  tolerations: &tolerations
+  - key: "node-role"
+    operator: "Equal"
+    value: "infra"
+    effect: "NoSchedule"
+  persistence:
+    size: 500Mi
+
+loki:
+  auth_enabled: false
+  commonConfig:
+    replication_factor: 1
+  schemaConfig:
+    configs:
+      - from: "2024-04-01"
+        store: tsdb
+        object_store: s3
+        schema: v13
+        index:
+          prefix: loki_index_
+          period: 24h
+  pattern_ingester:
+      enabled: true
+  storage:
+    bucketNames:
+      chunks: homework9-bucket
+      ruler: homework9-bucket-ruler
+      admin: homework9-bucket-admin
+    type: s3
+    s3:
+      endpoint: storage.yandexcloud.net
+      region: ru-central1
+      s3ForcePathStyle: true
+
+gateway:
+  nodeSelector: *nodeSelector
+  tolerations: *tolerations
+
+chunksCache:
+  nodeSelector: *nodeSelector
+  tolerations: *tolerations
+
+resultsCache:
+  nodeSelector: *nodeSelector
+  tolerations: *tolerations
+
+lokiCanary:
+  nodeSelector: *nodeSelector
+  tolerations: *tolerations
+
+backend:
+  replicas: 0
+read:
+  replicas: 0
+write:
+  replicas: 0
+
+ingester:
+  replicas: 0
+querier:
+  replicas: 0
+queryFrontend:
+  replicas: 0
+queryScheduler:
+  replicas: 0
+distributor:
+  replicas: 0
+compactor:
+  replicas: 0
+indexGateway:
+  replicas: 0
+bloomCompactor:
+  replicas: 0
+bloomGateway:
+  replicas: 0
