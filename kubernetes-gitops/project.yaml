@@ -1,0 +1,53 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: otus
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  sourceRepos:
+  - 'https://github.com/Kuber-2024-10OTUS/omaksimov_repo.git'
+  destinations:
+  - namespace: homework
+    server: https://kubernetes.default.svc
+  - namespace: homeworkhelm
+    server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+  - group: ''
+    kind: Namespace
+  namespaceResourceBlacklist:
+  - group: ''
+    kind: ResourceQuota
+  - group: ''
+    kind: LimitRange
+  - group: ''
+    kind: NetworkPolicy
+  namespaceResourceWhitelist:
+  - group: ''
+    kind: Service
+  - group: ''
+    kind: Secret
+  - group: ''
+    kind: ConfigMap
+  - group: ''
+    kind: PersistentVolumeClaim
+  - group: ''
+    kind: ServiceAccount
+  - group: 'apps'
+    kind: Deployment
+  - group: 'apps'
+    kind: StatefulSet
+  - group: 'networking.k8s.io'
+    kind: Ingress
+  - group: 'networking.k8s.io'
+    kind: NetworkPolicy
+  - group: 'policy'
+    kind: PodDisruptionBudget
+  roles:
+  - name: project-apps-full-permissions-role
+    description: Full permissions for applications in project
+    policies:
+    - p, proj:otus:project-apps-full-permissions-role, applications, *, otus/*, allow
+    groups:
+    - homework10
