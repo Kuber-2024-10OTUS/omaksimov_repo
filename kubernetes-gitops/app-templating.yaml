@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kubernetes-templating
+  namespace: argocd
+spec:
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+  project: otus
+  source:
+    repoURL: https://github.com/Kuber-2024-10OTUS/omaksimov_repo.git
+    targetRevision: kubernetes-templating
+    path: kubernetes-templating/homework
+    helm:
+      releaseName: kubernetes-templating
+      valuesObject:
+        externalDomain: &externalDomain "homeworkhelm.otus"
+        ingress:
+          host: *externalDomain
+        nginx:
+          serverName: *externalDomain
+        deployment:
+          replicas: 1
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: homeworkhelm
