@@ -209,3 +209,32 @@ cl1h6cabtcgniaco0v2f-oxax   Ready    <none>          122m   v1.32.2   10.233.20.
 cl1h6cabtcgniaco0v2f-yjyt   Ready    <none>          122m   v1.32.2   10.233.30.25   <none>        Ubuntu 24.04.1 LTS   6.8.0-50-generic   containerd://1.7.25
 cl1qmi9t2f6shckef2k0-ehic   Ready    control-plane   124m   v1.32.2   10.233.30.13   <none>        Ubuntu 24.04.1 LTS   6.8.0-50-generic   containerd://1.7.25
 ```
+8. Для задания со * развернут HA кластер из 3-х master и 2-х worker нод с помощью `kubespray`
+```bash
+yc compute instance list
++----------------------+---------------------------+---------------+---------+--------------+--------------+
+|          ID          |           NAME            |    ZONE ID    | STATUS  | EXTERNAL IP  | INTERNAL IP  |
++----------------------+---------------------------+---------------+---------+--------------+--------------+
+| -------------------- | cl1nbmui5dskji33fr27-acij | ru-central1-b | RUNNING |              | 10.233.20.29 |
+| -------------------- | cl1q6ggmss73nghq9l1d-evod | ru-central1-b | RUNNING |              | 10.233.20.7  |
+| -------------------- | cl1q6ggmss73nghq9l1d-ecaf | ru-central1-a | RUNNING |              | 10.233.10.8  |
+| -------------------- | cl1q6ggmss73nghq9l1d-itil | ru-central1-d | RUNNING |              | 10.233.30.21 |
+| -------------------- | k8s-cluster-bastion       | ru-central1-d | RUNNING | <bastion_ip> | 10.233.30.5  |
+| -------------------- | cl1nbmui5dskji33fr27-ybyq | ru-central1-d | RUNNING |              | 10.233.30.30 |
++----------------------+---------------------------+---------------+---------+--------------+--------------+
+
+```
+```bash
+ansible-playbook -i ./inventory/k8s-cluster/inventory.ini -e @./inventory/k8s-cluster/extra_vars.yml cluster.yml -b
+```
+[Inventory](./ansible/inventory.ini) и [extra_vars](./ansible/extra_vars.yml) в директории `kubernetes-prod/ansible` репозитория. 
+```bash
+kubectl get nodes -o wide
+NAME      STATUS   ROLES           AGE   VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION     CONTAINER-RUNTIME
+master1   Ready    control-plane   23m   v1.32.2   10.233.20.7    <none>        Ubuntu 24.04.1 LTS   6.8.0-50-generic   containerd://2.0.3
+master2   Ready    control-plane   21m   v1.32.2   10.233.10.8    <none>        Ubuntu 24.04.1 LTS   6.8.0-50-generic   containerd://2.0.3
+master3   Ready    control-plane   21m   v1.32.2   10.233.30.21   <none>        Ubuntu 24.04.1 LTS   6.8.0-50-generic   containerd://2.0.3
+worker1   Ready    <none>          21m   v1.32.2   10.233.30.30   <none>        Ubuntu 24.04.1 LTS   6.8.0-50-generic   containerd://2.0.3
+worker2   Ready    <none>          21m   v1.32.2   10.233.20.29   <none>        Ubuntu 24.04.1 LTS   6.8.0-50-generic   containerd://2.0.3
+
+```
