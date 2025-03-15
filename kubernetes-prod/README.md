@@ -4,7 +4,7 @@
 
 Домашнее задание выполнено в `Managed Service for Kubernetes` в `Yandex Cloud`
 
-1. Созданы 4 ВМ: 1 master для ноды, 3 для worker нод.
+1. Созданы 4 ВМ: 1 для master ноды, 3 для worker нод, а также бастион для доступа к ВМ кластера извне.
 ```bash
 yc compute instance list
 +----------------------+---------------------------+---------------+---------+-----------------+--------------+
@@ -12,7 +12,7 @@ yc compute instance list
 +----------------------+---------------------------+---------------+---------+-----------------+--------------+
 | -------------------- | cl1h6cabtcgniaco0v2f-oxax | ru-central1-b | RUNNING |                 | 10.233.20.20 |
 | -------------------- | cl1h6cabtcgniaco0v2f-iciw | ru-central1-a | RUNNING |                 | 10.233.10.27 |
-| -------------------- | k8s-cluster-bastion       | ru-central1-d | RUNNING | --------------- | 10.233.30.14 |
+| -------------------- | k8s-cluster-bastion       | ru-central1-d | RUNNING |   <bastion_ip>  | 10.233.30.14 |
 | -------------------- | cl1h6cabtcgniaco0v2f-yjyt | ru-central1-d | RUNNING |                 | 10.233.30.25 |
 | -------------------- | cl1qmi9t2f6shckef2k0-ehic | ru-central1-d | RUNNING |                 | 10.233.30.13 |
 +----------------------+---------------------------+---------------+---------+-----------------+--------------+
@@ -209,20 +209,19 @@ cl1h6cabtcgniaco0v2f-oxax   Ready    <none>          122m   v1.32.2   10.233.20.
 cl1h6cabtcgniaco0v2f-yjyt   Ready    <none>          122m   v1.32.2   10.233.30.25   <none>        Ubuntu 24.04.1 LTS   6.8.0-50-generic   containerd://1.7.25
 cl1qmi9t2f6shckef2k0-ehic   Ready    control-plane   124m   v1.32.2   10.233.30.13   <none>        Ubuntu 24.04.1 LTS   6.8.0-50-generic   containerd://1.7.25
 ```
-8. Для задания со * развернут HA кластер из 3-х master и 2-х worker нод с помощью `kubespray`
+8. Для задания со * развернут HA кластер из 3-х master и 2-х worker нод с помощью `kubespray`. Для доступа к ВМ извне также использовался бастион.
 ```bash
 yc compute instance list
-+----------------------+---------------------------+---------------+---------+--------------+--------------+
-|          ID          |           NAME            |    ZONE ID    | STATUS  | EXTERNAL IP  | INTERNAL IP  |
-+----------------------+---------------------------+---------------+---------+--------------+--------------+
-| -------------------- | cl1nbmui5dskji33fr27-acij | ru-central1-b | RUNNING |              | 10.233.20.29 |
-| -------------------- | cl1q6ggmss73nghq9l1d-evod | ru-central1-b | RUNNING |              | 10.233.20.7  |
-| -------------------- | cl1q6ggmss73nghq9l1d-ecaf | ru-central1-a | RUNNING |              | 10.233.10.8  |
-| -------------------- | cl1q6ggmss73nghq9l1d-itil | ru-central1-d | RUNNING |              | 10.233.30.21 |
-| -------------------- | k8s-cluster-bastion       | ru-central1-d | RUNNING | <bastion_ip> | 10.233.30.5  |
-| -------------------- | cl1nbmui5dskji33fr27-ybyq | ru-central1-d | RUNNING |              | 10.233.30.30 |
-+----------------------+---------------------------+---------------+---------+--------------+--------------+
-
++----------------------+---------------------------+---------------+---------+----------------+--------------+
+|          ID          |           NAME            |    ZONE ID    | STATUS  |  EXTERNAL IP   | INTERNAL IP  |
++----------------------+---------------------------+---------------+---------+----------------+--------------+
+| -------------------- | cl18955bhe76unpgifc1-ynyf | ru-central1-b | RUNNING |                | 10.233.20.13 |
+| -------------------- | cl16emmkbsrhh8v1cflm-ogar | ru-central1-b | RUNNING |                | 10.233.20.3  |
+| -------------------- | cl16emmkbsrhh8v1cflm-utem | ru-central1-a | RUNNING |                | 10.233.10.3  |
+| -------------------- | k8s-cluster-bastion       | ru-central1-d | RUNNING |  <bastion_ip>  | 10.233.30.16 |
+| -------------------- | cl18955bhe76unpgifc1-ecok | ru-central1-d | RUNNING |                | 10.233.30.4  |
+| -------------------- | cl16emmkbsrhh8v1cflm-ikex | ru-central1-d | RUNNING |                | 10.233.30.15 |
++----------------------+---------------------------+---------------+---------+----------------+--------------+
 ```
 ```bash
 ansible-playbook -i ./inventory/k8s-cluster/inventory.ini -e @./inventory/k8s-cluster/extra_vars.yml cluster.yml -b
@@ -231,10 +230,9 @@ ansible-playbook -i ./inventory/k8s-cluster/inventory.ini -e @./inventory/k8s-cl
 ```bash
 kubectl get nodes -o wide
 NAME      STATUS   ROLES           AGE   VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION     CONTAINER-RUNTIME
-master1   Ready    control-plane   23m   v1.32.2   10.233.20.7    <none>        Ubuntu 24.04.1 LTS   6.8.0-50-generic   containerd://2.0.3
-master2   Ready    control-plane   21m   v1.32.2   10.233.10.8    <none>        Ubuntu 24.04.1 LTS   6.8.0-50-generic   containerd://2.0.3
-master3   Ready    control-plane   21m   v1.32.2   10.233.30.21   <none>        Ubuntu 24.04.1 LTS   6.8.0-50-generic   containerd://2.0.3
-worker1   Ready    <none>          21m   v1.32.2   10.233.30.30   <none>        Ubuntu 24.04.1 LTS   6.8.0-50-generic   containerd://2.0.3
-worker2   Ready    <none>          21m   v1.32.2   10.233.20.29   <none>        Ubuntu 24.04.1 LTS   6.8.0-50-generic   containerd://2.0.3
-
+master1   Ready    control-plane   95m   v1.32.2   10.233.20.3    <none>        Ubuntu 24.04.1 LTS   6.8.0-50-generic   containerd://2.0.3
+master2   Ready    control-plane   94m   v1.32.2   10.233.10.3    <none>        Ubuntu 24.04.1 LTS   6.8.0-50-generic   containerd://2.0.3
+master3   Ready    control-plane   94m   v1.32.2   10.233.30.15   <none>        Ubuntu 24.04.1 LTS   6.8.0-50-generic   containerd://2.0.3
+worker1   Ready    <none>          93m   v1.32.2   10.233.20.13   <none>        Ubuntu 24.04.1 LTS   6.8.0-50-generic   containerd://2.0.3
+worker2   Ready    <none>          93m   v1.32.2   10.233.30.4    <none>        Ubuntu 24.04.1 LTS   6.8.0-50-generic   containerd://2.0.3
 ```
