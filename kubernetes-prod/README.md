@@ -209,7 +209,7 @@ cl1h6cabtcgniaco0v2f-oxax   Ready    <none>          122m   v1.32.2   10.233.20.
 cl1h6cabtcgniaco0v2f-yjyt   Ready    <none>          122m   v1.32.2   10.233.30.25   <none>        Ubuntu 24.04.1 LTS   6.8.0-50-generic   containerd://1.7.25
 cl1qmi9t2f6shckef2k0-ehic   Ready    control-plane   124m   v1.32.2   10.233.30.13   <none>        Ubuntu 24.04.1 LTS   6.8.0-50-generic   containerd://1.7.25
 ```
-8. Для задания со * развернут HA кластер из 3-х master и 2-х worker нод с помощью `kubespray` c `nginx-proxy` на `worker` нодах для балансировки запросов к `master` нодам. Для доступа к ВМ извне также использовался бастион.
+8. Для задания со * развернут HA кластер из 3-х master и 2-х worker нод с помощью `kubespray` c `nginx-proxy` на `worker` нодах для балансировки запросов к `master` нодам. Для доступа к ВМ извне также использовался бастион. `kubespray` также разворачивает `metrics-server` и `ingress controller` на `worker` нодах.
 ```bash
 yc compute instance list
 +----------------------+---------------------------+---------------+---------+----------------+--------------+
