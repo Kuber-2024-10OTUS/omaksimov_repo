@@ -224,6 +224,21 @@ yc compute instance list
 +----------------------+---------------------------+---------------+---------+----------------+--------------+
 ```
 ```bash
+git clone https://github.com/kubernetes-sigs/kubespray.git
+```
+```bash
+cd kubespray
+```
+```bash
+source .venv/bin/activate
+```
+```bash
+pip install -r requirements.txt
+```
+```bash
+cp -r inventory/sample inventory/k8s-cluster
+```
+```bash
 ansible-playbook -i ./inventory/k8s-cluster/inventory.ini -e @./inventory/k8s-cluster/extra_vars.yml cluster.yml -b
 ```
 [Inventory](./ansible/inventory.ini) и [extra_vars](./ansible/extra_vars.yml) в директории `kubernetes-prod/ansible` репозитория. 
