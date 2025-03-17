@@ -1,0 +1,10 @@
+kube_version: "1.32.2"
+
+kube_service_addresses: 10.96.0.0/16
+kube_pods_subnet: 10.112.0.0/16
+
+metrics_server_enabled: true
+
+ingress_nginx_enabled: true
+ingress_nginx_nodeselector:
+  node-role: "worker"
